@@ -1,6 +1,6 @@
 ruleset track_trips_2 {
   meta {
-    name "Track_Trips"
+    name "Track_Trips_2"
     description <<
 For a lab I have to write
 >>
