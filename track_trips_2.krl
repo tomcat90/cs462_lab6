@@ -28,7 +28,7 @@ For a lab I have to write
   rule find_long_trips {
     select when explicit trip_processed
     pre{
-      mileage = event:attr("milage");
+      mileage = event:attr("milage").klog("The milage is: ");
     }
     fired {
       raise explicit event 'found_long_trip' if mileage >= long_trip
