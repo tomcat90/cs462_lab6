@@ -38,7 +38,7 @@ For a lab I have to write
     }
     {
       send_directive("say") with
-        something = "#{input}";
+        something = "WTF RESPOND #{input}";
     }
   }
 
