@@ -31,5 +31,12 @@ For a lab I have to write
         log ("LOG says Hello " + name);
     }
   }
+  rule message {
+    select when echo message
+    {
+      send_directive("say") with
+        something = "#{input}"
+    }
+  }
 
 }
