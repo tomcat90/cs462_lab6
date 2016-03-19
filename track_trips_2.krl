@@ -14,25 +14,21 @@ For a lab I have to write
     long_trip = 100
   }
   rule process_trip {
-    select when car new_trip
-    pre{
-      mileage = event:attr("mileage");
-    }
+    select when car new_trip mileage "(.*)" setting(mileage)
     send_directive("trip") with
-      trip_length = "#{mileage}";
+      trip_length = mileage;
     fired {
       raise explicit event 'trip_processed' attributes event:attrs();
     }
   }
 
   rule find_long_trips {
-    select when explicit trip_processed
+    select when explicit trip_processed mileage "(.*)" setting(mileage)
     pre{
-      mileage = event:attrs('mileage').klog("Mileage is: ");
       attrs = event:attrs().klog("attributes are : ");
     }
-    if (mileage.as("num") >= long_trip) then {
-      klog ("It's a long trip");
+    if (mileage >= long_trip) then {
+      log ("WTF MAN");
     }
     fired{
       raise explicit event 'found_long_trip' attributes event:attrs();
