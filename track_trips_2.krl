@@ -31,7 +31,7 @@ For a lab I have to write
       mileage = event:attrs('mileage').klog("Mileage is: ");
       attrs = event:attrs().klog("attributes are : ");
     }
-    if (mileage >= long_trip) then {
+    if (mileage.as("num") >= long_trip) then {
       klog ("It's a long trip");
     }
     fired{
