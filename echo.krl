@@ -33,9 +33,12 @@ For a lab I have to write
   }
   rule message {
     select when echo message
+    pre{
+      input = event:attr("event");
+    }
     {
       send_directive("say") with
-        something = "#{input}"
+        something = "#{input}";
     }
   }
 
