@@ -31,8 +31,8 @@ For a lab I have to write
       mileage = event:attrs('mileage').klog("Mileage is: ");
       attrs = event:attrs().klog("attributes are : ");
     }
-    if (mileage >= long_trip) then {
-      log("It's a long trip");
+    if (mileage > long_trip) then {
+      log ("It's a long trip");
     }
     fired{
       raise explicit event 'found_long_trip'
