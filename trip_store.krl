@@ -19,6 +19,15 @@ For a lab I have to write
     long_trips = function() {
       ent:long_trips;
     };
+
+    short_trips = function() {
+      AllTrips = trips().klog("ALL TRIPS: ");
+      trips().filter(function(x) {
+        long_trips().none(function(y) {
+          (x{"timestamp"}.klog("x: ") eq y{"timestamp"}.klog("y: ")).klog("x eq y?: ");
+        }).klog("x in long?: ");
+      }).klog("Short trips: ");
+    };
   }
 
   rule collect_trips {
