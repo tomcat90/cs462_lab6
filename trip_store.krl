@@ -7,6 +7,14 @@ For a lab I have to write
     author "Thomas Tingey"
     logging on
     sharing on
+    provides trips, long_trips, short_trips
+
+  }
+
+  global {
+    trips = function() {
+      ent:trips;
+    };
   }
 
   rule collect_trips {
@@ -15,11 +23,10 @@ For a lab I have to write
         now = time:now();
       }
       fired {
-        log("Trips before: " + ent:trips);
+        log("Trips before: " + trips);
         set ent:trips{now} mileage;
-        log("Trips after: " + ent:trips);
+        log("Trips before: " + trips);
       }
-
   }
 
   rule clear_trips  {
