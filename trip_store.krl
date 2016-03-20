@@ -22,7 +22,7 @@ For a lab I have to write
       pre {
         now = time:now();
         mileage = event:attr("mileage");
-        newTrip = {"timestamp" : time, "length": mileage};
+        newTrip = {"timestamp" : now, "length": mileage};
       }
       fired {
         set ent:trips ent:trips.append(newTrip);
