@@ -17,18 +17,19 @@ For a lab I have to write
     select when car new_trip mileage "(.*)" setting(mileage)
     send_directive("trip") with
       trip_length = mileage;
-    fired {
-      raise explicit event 'trip_processed' attributes event:attrs();
+    always {
+      raise explicit event 'trip_processed' attributes event:attrs()
     }
   }
 
   rule find_long_trips {
     select when explicit trip_processed mileage "(.*)" setting(mileage)
     if (mileage >= long_trip) then {
-      log ("WTF MAN");
+      send_directive("long_trip_found") with
+        long_trip = mileage;
     }
     fired{
-      raise explicit event 'found_long_trip' attributes event:attrs();
+      raise explicit event 'found_long_trip' attributes event:attrs()
     }
   }
 }
