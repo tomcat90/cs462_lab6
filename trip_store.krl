@@ -15,6 +15,10 @@ For a lab I have to write
     trips = function() {
       ent:trips;
     };
+
+    long_trips = function() {
+      ent:long_trips;
+    };
   }
 
   rule collect_trips {
@@ -30,6 +34,20 @@ For a lab I have to write
       }
   }
 
+  rule collect_long_trips {
+      select when explicit found_long_trip
+      pre {
+        now = time:now();
+        mileage = event:attr("mileage");
+        newTrip = {"timestamp" : now, "length": mileage};
+      }
+      fired {
+        set ent:long_trips ent:long_trips.append(newTrip);
+        raise explicit event 'log_long_trips';
+      }
+  }
+
+
   rule clear_trips  {
     select when car trip_reset
     always{
@@ -42,5 +60,11 @@ For a lab I have to write
     select when explicit log_trips
     send_directive("trips") with
       trips = ent:trips;
+  }
+
+  rule log_long_trips {
+    select when explicit log_long_trips
+    send_directive("long_trips") with
+      long_trips = ent:long_trips;
   }
 }

@@ -34,10 +34,4 @@ For a lab I have to write
       raise explicit event 'found_long_trip' attributes event:attrs();
     }
   }
-
-  rule wtf_trips {
-    select when explicit found_long_trip
-    send_directive("long_trip") with
-      long_trip = "Yep I found me";
-  }
 }
