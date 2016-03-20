@@ -26,16 +26,21 @@ For a lab I have to write
       }
       fired {
         set ent:trips ent:trips.append(newTrip);
-        log("Trips: " + trips);
+        raise explicit event 'log_trips';
       }
   }
 
   rule clear_trips  {
     select when car trip_reset
     always{
-      //Clears the trips by setting them to empty
-      set ent:trips [];
-      set ent:long_trips [];
+      clear ent:trips;
+      clear ent:long_trips;
     }
+  }
+
+  rule log_trips {
+    select when explicit log_trips
+    send_directive("trips") with
+      trips = ent:trips;
   }
 }
