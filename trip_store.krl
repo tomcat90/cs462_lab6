@@ -18,14 +18,15 @@ For a lab I have to write
   }
 
   rule collect_trips {
-      select when explicit trip_processed mileage "(.*)" setting(mileage)
+      select when explicit trip_processed
       pre {
         now = time:now();
+        mileage = event:attr("mileage");
+        newTrip = {"timestamp" : time, "length": mileage};
       }
       fired {
-        log("Trips before: " + trips);
-        set ent:trips{now} mileage;
-        log("Trips before: " + trips);
+        set ent:trips ent:trips.append(newTrip);
+        log("Trips: " + trips);
       }
   }
 
