@@ -24,9 +24,6 @@ For a lab I have to write
 
   rule find_long_trips {
     select when explicit trip_processed mileage "(.*)" setting(mileage)
-    pre{
-      attrs = event:attrs().klog("attributes are : ");
-    }
     if (mileage >= long_trip) then {
       log ("WTF MAN");
     }
