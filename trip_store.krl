@@ -38,7 +38,7 @@ For a lab I have to write
       select when explicit found_long_trip
       pre {
         now = time:now();
-        mileage = event:attr("mileage");
+        mileage = event:attr("mileage").klog("mileage is: ");
         newTrip = {"timestamp" : now, "length": mileage};
       }
       fired {
