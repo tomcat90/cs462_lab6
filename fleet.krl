@@ -13,6 +13,11 @@ Child Pico
 
   }
   global {
+    vehicles = function() {
+      wranglerChildren = wrangler:children();
+      children = wranglerChildren{"children"};
+      children;
+    }
   }
 
   rule create_vehicle {
@@ -29,6 +34,8 @@ Child Pico
     {
       event:send({"cid":meta:eci()}, "wrangler", "child_creation")  // wrangler os event.
       with attrs = attributes.klog("attributes: "); // needs a name attribute for child
+      send_directive("children") with
+        children = vehicles;
     }
     always{
       set ent:wtf 0 if not ent:wtf;
