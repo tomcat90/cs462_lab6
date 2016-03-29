@@ -22,6 +22,7 @@ Child Pico
       attributes = {}
                     .put(["Prototype_rids"],"b507769x3.prod") // semicolon separated rulesets the child needs installed at creation
                     .put(["name"], name) // name for child
+                    .put(["parent_eci"],"3BCD6C9C-ED82-11E5-BFAD-D125040ECC4C")
                     ;
 
     }
