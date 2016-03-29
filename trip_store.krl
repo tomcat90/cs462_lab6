@@ -2,8 +2,8 @@ ruleset trip_store {
   meta {
     name "Trip_Store"
     description <<
-For a lab I have to write
->>
+                For a lab I have to write
+                >>
     author "Thomas Tingey"
     logging on
     sharing on
