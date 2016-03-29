@@ -14,9 +14,28 @@ Child Pico
   }
   global {
     vehicles = function() {
-      wranglerChildren = wrangler:children();
-      children = wranglerChildren{"children"};
-      children;
+      wranglerSubs = wrangler:children();
+      subscriptions = wranglerSubs{"subscriptions"};
+      subscriptions;
+    }
+
+    get_back_channel_eci_by_eci = function(eci) {
+      subs = vehicles();
+      subscriptions = subs{"subscribed"};
+      stripped_subs = subscriptions.map(function(subscription){
+        vals = subscription.values();
+        vals.head()
+      });
+
+      filtered_subs = stripped_subs.filter(function(obj) {
+        obj{"target_eci"} eq eci
+      });
+
+      back_channel = filtered_subs.map(function(obj) {
+        obj{"back_channel"}
+      });
+
+      back_channel.head()
     }
   }
 
@@ -41,6 +60,33 @@ Child Pico
       log("create child for " + child);
     }
   }
+
+    rule delete_vehicle {
+        select when car unneeded_vehicle
+            pre {
+                eci = event:attr("eci").klog("delete this eci: ");
+
+                attributes = {}
+                            .put(["deletionTarget"], eci)
+                            ;
+                back_channel_eci = get_back_channel_eci_by_eci(eci);
+                bc_attributes = {}
+                                    .put(["eci"], back_channel_eci)
+                                    ;
+            }
+
+            if (eci neq '') then {
+                event:send({"cid":meta:eci()}, "wrangler", "child_deletion")
+                    with attrs = attributes.klog("del attributes: ");
+                event:send({"cid":meta:eci()}, "wrangler", "subscription_removal")
+                    with attrs = bc_attributes.klog("bc_attributes: ");
+            }
+
+            always {
+                log "can't delete an empty eci: " + eci;
+            }
+    }
+
 
   rule autoAccept {
     select when wrangler inbound_pending_subscription_added
