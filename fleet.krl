@@ -14,7 +14,7 @@ Child Pico
   }
   global {
     vehicles = function() {
-      wranglerSubs = wrangler:children();
+      wranglerSubs = wrangler:subscriptions();
       subscriptions = wranglerSubs{"subscriptions"};
       subscriptions;
     }
