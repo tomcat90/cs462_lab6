@@ -17,6 +17,7 @@ rule childToParent {
     pre {
        // find parant
        // place  "use module  b507199x5 alias wrangler_api" in meta block!!
+       name = event:attr("name").klog("create_well_known got attr(name): ");
        parent_results = wrangler:parent();
        parent = parent_results{'parent'};
        parent_eci = parent[0]; // eci is the first element in tuple
@@ -26,7 +27,8 @@ rule childToParent {
                       .put(["your_role"],"Fleet")
                       .put(["target_eci"],parent_eci.klog("target Eci: "))
                       .put(["channel_type"],"Fleet_Lab")
-                      .put(["attrs"],attributes)
+                      .put(["attrs"],"success")
+                      .put(["name"], name)
                       ;
     }
     always {
