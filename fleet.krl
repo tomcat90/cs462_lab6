@@ -20,7 +20,7 @@ Child Pico
     pre {
       name = "Vehicle-" + ent:wtf.as(str);
       attributes = {}
-                    .put(["Prototype_rids"],"b507769x3.prod") // semicolon separated rulesets the child needs installed at creation
+                    .put(["Prototype_rids"],"b507769x6.prod;b507769x3.prod") // semicolon separated rulesets the child needs installed at creation
                     .put(["name"], name) // name for child
                     .put(["parent_eci"],"3BCD6C9C-ED82-11E5-BFAD-D125040ECC4C")
                     ;
@@ -34,6 +34,21 @@ Child Pico
       set ent:wtf 0 if not ent:wtf;
       set ent:wtf ent:wtf + 1;
       log("create child for " + child);
+    }
+  }
+
+  rule autoAccept {
+    select when wrangler inbound_pending_subscription_added
+    pre{
+      attributes = event:attrs().klog("subcription :");
+      }
+      {
+      noop();
+      }
+    always{
+      raise wrangler event 'pending_subscription_approval'
+          attributes attributes;
+          log("auto accepted subcription.");
     }
   }
 }
