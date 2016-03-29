@@ -25,6 +25,7 @@ rule childToParent {
                       .put(["my_role"],"Vehicle")
                       .put(["your_role"],"Fleet")
                       .put(["target_eci"],parent_eci.klog("target Eci: "))
+                      .put(["my_eci"], wrangler:self())
                       .put(["channel_type"],"Fleet_Lab")
                       .put(["attrs"],"success")
                       ;
