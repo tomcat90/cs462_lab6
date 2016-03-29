@@ -37,16 +37,18 @@ Child Pico
     }
   }
 
-  rule accept_child_subscription {
-    // actually accepts all subscriptions
+  rule autoAccept {
     select when wrangler inbound_pending_subscription_added
-    pre {
-      attributes = event:attrs().klog("subscription attrs: ");
-    }
-    always {
-      raise wrangler event "pending_subscription_approval"
-        attributes attributes;
-        log ("auto acception child subscription");
+    pre{
+      attributes = event:attrs().klog("subcription :");
+      }
+      {
+      noop();
+      }
+    always{
+      raise wrangler event 'pending_subscription_approval'
+          attributes attributes;
+          log("auto accepted subcription.");
     }
   }
 }
