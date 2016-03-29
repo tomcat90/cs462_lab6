@@ -19,7 +19,7 @@ Child Pico
       subscriptions;
     }
 
-    get_back_channel_eci_by_eci = function(eci) {
+    get_back_channel_eci_by_name = function(name) {
       subs = vehicles();
       subscriptions = subs{"subscribed"};
       stripped_subs = subscriptions.map(function(subscription){
@@ -28,7 +28,7 @@ Child Pico
       });
 
       filtered_subs = stripped_subs.filter(function(obj) {
-        obj{"target_eci"} eq eci
+        obj{"subscription_name"} eq name
       });
 
       back_channel = filtered_subs.map(function(obj) {
@@ -65,11 +65,11 @@ Child Pico
         select when car unneeded_vehicle
             pre {
                 eci = event:attr("eci").klog("delete this eci: ");
-
+                name = event:attr("name").klog("delete this subName: ");
                 attributes = {}
                             .put(["deletionTarget"], eci)
                             ;
-                back_channel_eci = get_back_channel_eci_by_eci(eci);
+                back_channel_eci = get_back_channel_eci_by_name(name);
                 bc_attributes = {}
                                     .put(["eci"], back_channel_eci)
                                     ;
