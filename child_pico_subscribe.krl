@@ -27,7 +27,7 @@ rule childToParent {
                       .put(["your_role"],"Fleet")
                       .put(["target_eci"],parent_eci.klog("target Eci: "))
                       .put(["channel_type"],"Fleet_Lab")
-                      .put(["attrs"],meta:eci)
+                      .put(["attrs"],meta:eci())
                       ;
     }
     always {
