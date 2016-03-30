@@ -51,9 +51,13 @@ Child Pico
           error = error_info.put({"skyCloudError": response_error, "skyCloudErrorMsg": response_error_str, "skyCloudReturnValue": response_content});
           is_bad_response = (response_content.isnull() || response_content eq "null" || response_error || response_error_str);
 
+          vehicle_final = {}
+                          .put([childEci], response_content);
+
+
           //This sets theTrips either to the content or the error
-          //(responseCode eq "200" && not is_bad_response)
-          childEci => response_content | error
+          (responseCode eq "200" && not is_bad_response) => vehicle_final | error
+          //childEci => response_content | error
         });
       theTrips;
     }
