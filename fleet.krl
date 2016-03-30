@@ -26,7 +26,35 @@ Child Pico
     }
 
     trips = function() {
-      0;
+      theChildren = children();
+      theTrips = theChildren.map(function(theChild){
+          url = "https://cs.kobj.net/sky/cloud/";
+          childEci = theChild[0];
+          rid = "b507769x4.prod";
+          funcCall = "trips";
+          params = {};
+          response = http:get("#{url}#{rid}/#{funcCall}", (params || {}).put(["_eci"], childEci));
+
+          responseCode = response{"status_code"};
+
+          error_info = {
+                            "error": "sky cloud failed",
+                            "httpStatus": {
+                                "code": responseCode,
+                                "message": response{"status_line"}
+                            }
+                        };
+
+          response_content = response{"content"}.decode();
+          response_error = (response_content.typeof() eq "hash" && response_content{"error"}) => response_content{"error"} | 0;
+          response_error_str = (response_content.typeof() eq "hash" && response_content{"error_str"}) => response_content{"error_str"} | 0;
+          error = error_info.put({"skyCloudError": response_error, "skyCloudErrorMsg": response_error_str, "skyCloudReturnValue": response_content});
+          is_bad_response = (response_content.isnull() || response_content eq "null" || response_error || response_error_str);
+
+          //This sets theTrips either to the content or the error
+          (responseCode eq "200" && not is_bad_response) => response_content | error
+        });
+      theTrips;
     }
 
     get_back_channel_eci_by_name = function(name) {
