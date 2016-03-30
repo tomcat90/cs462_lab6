@@ -19,6 +19,16 @@ Child Pico
       subscriptions;
     }
 
+    children = function() {
+      wranglerChildren = wrangler:children();
+      children = wranglerChildren{"children"};
+      children;
+    }
+
+    trips = function() {
+
+    }
+
     get_back_channel_eci_by_name = function(name) {
       subs = vehicles();
       subscriptions = subs{"subscribed"};
