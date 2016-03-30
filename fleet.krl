@@ -52,7 +52,8 @@ Child Pico
           is_bad_response = (response_content.isnull() || response_content eq "null" || response_error || response_error_str);
 
           //This sets theTrips either to the content or the error
-          (responseCode eq "200" && not is_bad_response) => response_content | error
+          //(responseCode eq "200" && not is_bad_response)
+          childEci => response_content | error
         });
       theTrips;
     }
