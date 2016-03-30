@@ -26,7 +26,7 @@ Child Pico
     }
 
     trips = function() {
-
+      0;
     }
 
     get_back_channel_eci_by_name = function(name) {
