@@ -44,7 +44,7 @@ Child Pico
     pre {
       name = "Vehicle-" + ent:wtf.as(str);
       attributes = {}
-                    .put(["Prototype_rids"],"b507769x6.prod;b507769x3.prod") // semicolon separated rulesets the child needs installed at creation
+                    .put(["Prototype_rids"],"b507769x6.prod;b507769x3.prod;b507769x4.prod") // semicolon separated rulesets the child needs installed at creation
                     .put(["name"], name) // name for child
                     .put(["parent_eci"],"A56C7E82-F55B-11E5-AA88-EF82E71C24E1")
                     ;
