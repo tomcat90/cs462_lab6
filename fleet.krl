@@ -52,7 +52,7 @@ Child Pico
           is_bad_response = (response_content.isnull() || response_content eq "null" || response_error || response_error_str);
 
           vehicle_final = {}
-                          .put([childEci], response_content[0]);
+                          .put([childEci], response_content[1]);
 
 
           //This sets theTrips either to the content or the error
