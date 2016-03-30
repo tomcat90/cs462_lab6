@@ -9,7 +9,7 @@ Child Pico
     sharing on
 
     use module  b507199x5 alias wrangler
-    provides vehicles
+    provides vehicles, children, trips
 
   }
   global {
