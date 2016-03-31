@@ -262,7 +262,7 @@ Child Pico
         finalized_reports = ent:finalized_reports || [];
         //This is hacky way to make sure they are in the correct order found online
         reversed_finalized_reports = finalized_reports.reverse();
-        trips = finished_reports{[correlation_identifier]}.values().klog("The trips: ");
+        top_trips = finished_reports{[correlation_identifier]}.klog("WTF IS THIS: ");
         count_of_trips = trips.length();
         count_of_vehicles = finished_reports.length();
 
