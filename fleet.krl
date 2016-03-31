@@ -221,7 +221,7 @@ Child Pico
           reports = ent:reports || {};
           current_report = reports{[correlation_identifier]} || {};
           vehicles = current_report{["vehicles"]} || [];
-          new_vehicles = trips.append(vehicle).klog("The new vehicles: ");
+          new_vehicles = vehicles.append(vehicle).klog("The new vehicles: ");
           vehicles_count = vehicles().length();
           responding_count = new_vehicles.length();
           new_report = {}
