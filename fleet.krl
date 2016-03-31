@@ -216,8 +216,7 @@ Child Pico
           vehicle_trips = event:attr("trips").decode().klog("Trips recieved");
           vehicle_eci = event:attr("vehicle_eci").klog("Child Eci: ");
           vehicle = {}
-                  .put(["vehicle_eci"], vehicle_eci)
-                  .put(["trips"], vehicle_trips{["the_trips"]})
+                  .put([vehicle_eci], vehicle_trips{["the_trips"]})
                   .klog("The vehicle");
           reports = ent:reports || {};
           current_report = reports{[correlation_identifier]} || [];
