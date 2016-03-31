@@ -219,8 +219,14 @@ Child Pico
                   .put([vehicle_eci], vehicle_trips{["the_trips"]})
                   .klog("The vehicle");
           reports = ent:reports || {};
-          current_report = reports{[correlation_identifier]} || [];
-          new_report = current_report.append(vehicle).klog("The new report: ");
+          current_report = reports{[correlation_identifier]} || {};
+          trips = current_report{["trips"]} || [];
+          new_trips = trips.append(vehicle).klog("The new report: ");
+          new_report = {}
+                        .put("vehicles", vehicles().length())
+                        .put("responding", new_trips.length())
+                        .put("trips", new_trips)
+                        ;
           new_reports = reports.put([correlation_identifier], new_report).klog("New reports: ");
       }
       {
