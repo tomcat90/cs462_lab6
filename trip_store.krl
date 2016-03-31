@@ -89,10 +89,11 @@ ruleset trip_store {
       attributes = {}
                     .put(["correlation_identifier"], event:attr("correlation_identifier"))
                     .put(["trips"], my_trips_map.encode())
-                    .put(["vehicle_eci"], meta:eci());
-      parent_eci = event:attr("parent_eci");
-      parent_event_domain = event:attr("event_domain");
-      parent_event_identifier = event:attr("event_identifier");
+                    .put(["vehicle_eci"], meta:eci())
+                    .klog("These are what the child is sending: ");
+      parent_eci = event:attr("parent_eci").klog("Sending to: ");
+      parent_event_domain = event:attr("event_domain").klog("with this domain: ");
+      parent_event_identifier = event:attr("event_identifier").klog("And this id: ");
     }
     {
       event:send({"cid":parent_eci}, parent_event_domain, parent_event_identifier)
