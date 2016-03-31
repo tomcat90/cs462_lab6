@@ -26,11 +26,12 @@ Child Pico
     }
 
     vehicle_ecis = function() {
-      vehicles = vehicles();
-      vehicle_ecis = vehicles.map(function(vehicle){
-        vehicle{"attributes"};
+      vehicle_subs = vehicles();
+      vehicle_ecis = vehicle_subs.map(function(vehicle_obj) {
+        vehicle_obj{"attributes"}
       });
-      vehicle_ecis;
+
+      vehicle_ecis
     }
 
     allSubs = function() {
