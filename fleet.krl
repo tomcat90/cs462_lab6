@@ -16,10 +16,10 @@ Child Pico
     vehicles = function() {
       wranglerSubs = wrangler:subscriptions();
       subscriptions = wranglerSubs{"subscriptions"};
-      subscriptions = subscriptions.filter(function(vehicle) {
-          vehicle{"relationship"} eq "Fleet";
+      filtered_subscriptions = subscriptions.filter(function(obj) {
+          obj{"status"} eq "subscribed" && obj{"relationship"} eq "Fleet" && obj{"name_space"} eq "Fleet_Subscriptions"
         });
-      subscriptions;
+      filtered_subscriptions;
     }
 
     children = function() {
