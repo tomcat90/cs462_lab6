@@ -178,16 +178,14 @@ Child Pico
       select when fleet generate_report
       pre {
         correlation_identifier = "Report-" + math:random(99999);
-        vehicle_ecis = vehicle_ecis();
+        the_ecis = vehicle_ecis();
         attrs = {}
                   .put(["correlation_identifier"], correlation_identifier)
-                  .put(["vehicle_ecis"], vehicle_ecis)
+                  .put(["vehicle_ecis"], the_ecis)
                   .klog("Attrs of get_report: ");
       }
       fired {
-        raise explicit event 'start_scatter_report'
-            attributes attrs;
-        log("Started a scatter report");
+        raise explicit event 'start_scatter_report' attributes attrs;
       }
     }
 
