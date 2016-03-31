@@ -26,7 +26,7 @@ Child Pico
     }
 
     vehicle_ecis = function() {
-      vehicles = vehicles;
+      vehicles = vehicles();
       vehicle_ecis = vehicles.map(function(vehicle){
         vehicle{"attributes"};
       });
