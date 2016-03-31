@@ -81,14 +81,12 @@ ruleset trip_store {
     select when fleet report_trips
     pre {
       my_trips = trips();
-      my_trips_map = my_trips.map(function(trip){
-            vals = trip.values();
-            vals.head();
-        });
+      my_trips_map = {}
+                      .put(["the_trips"], my_trips);
 
       attributes = {}
                     .put(["correlation_identifier"], event:attr("correlation_identifier"))
-                    .put(["trips"], my_trips)
+                    .put(["trips"], my_trips_map.encode())
                     .put(["vehicle_eci"], meta:eci())
                     .klog("These are what the child is sending: ");
       parent_eci = event:attr("parent_eci").klog("Sending to: ");
