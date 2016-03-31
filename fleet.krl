@@ -9,7 +9,7 @@ Child Pico
     sharing on
 
     use module  b507199x5 alias wrangler
-    provides vehicles, children, trips, allSubs
+    provides vehicles, children, trips, allSubs, vehicle_ecis
 
   }
   global {
@@ -17,12 +17,20 @@ Child Pico
       vehicles = allSubs();
       stripped_vehicles = vehicles.map(function(vehicle){
                 vals = vehicle.values();
-                vals.head()
+                vals.head();
       });
       filtered_subscriptions = stripped_vehicles.filter(function(obj) {
           obj{"status"} eq "subscribed" && obj{"relationship"} eq "Fleet" && obj{"name_space"} eq "Fleet_Subscriptions"
         });
       filtered_subscriptions;
+    }
+
+    vehicle_ecis = function() {
+      vehicles = vehicles;
+      vehicle_ecis = vehicles.map(function(vehicle){
+        vehicle{"attributes"};
+      });
+      vehicle_ecis;
     }
 
     allSubs = function() {
