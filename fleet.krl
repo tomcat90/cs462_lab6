@@ -223,15 +223,15 @@ Child Pico
         correlation_identifier = event:attr("correlation_identifier");
         temp_results = results{[correlation_identifier, event:attr("vehicle_eci")]} || [];
         vehicles_trips = event:attr("trips").decode().klog("Trips recieved from child eci: " + event:attr("vehicle_eci"));
-        finished_trips = temp_results.append(vehicles_trips{["the_trips"]});
-        the_results = results.put([correlation_identifier, event:attr("vehicle_eci")], finished_trips);
+        finished_trips = temp_results.append(vehicles_trips{["the_trips"]}).klog("Temp Results: ");
+        the_results = results.put([correlation_identifier, event:attr("vehicle_eci")], finished_trips).klog("The Results: ");
 
-        temp_results = ent:running_reports || {};
-        current_report = temp_results{[correlation_identifier]} || [];
+        temp2_results = ent:running_reports || {};
+        current_report = temp2_results{[correlation_identifier]} || [];
         temp_report = current_report.filter(function(eci) {
             eci neq event:attr("vehicle_eci")
           });
-        running_reports = temp_results.put([correlation_identifier], temp_report);
+        running_reports = temp2_results.put([correlation_identifier], temp_report).klog("running reports: ");
       }
 
       if (running_reports{[correlation_identifier]}.length() == 0) then {
@@ -256,7 +256,7 @@ Child Pico
     rule finalize_report {
       select when explicit finalize_report
       pre {
-        attributes = event:attrs();
+        attributes = event:attrs().klog("these are the attributes recieved: ");
         correlation_identifier = event:attrs("correlation_identifier");
         finished_reports = ent:finished_reports;
         finalized_reports = ent:finalized_reports || [];
