@@ -14,9 +14,8 @@ Child Pico
   }
   global {
     vehicles = function() {
-      wranglerSubs = wrangler:subscriptions();
-      subscriptions = wranglerSubs{"subscriptions"};
-      filtered_subscriptions = subscriptions{"subscribed"}.filter(function(obj) {
+      vehicles = allSubs();
+      filtered_subscriptions = vehicles.filter(function(obj) {
           obj{"status"} eq "subscribed" && obj{"relationship"} eq "Fleet" && obj{"name_space"} eq "Fleet_Subscriptions"
         });
       filtered_subscriptions;
@@ -25,7 +24,7 @@ Child Pico
     allSubs = function() {
       wranglerSubs = wrangler:subscriptions();
       subscriptions = wranglerSubs{"subscriptions"};
-      subscriptions;
+      subscriptions{"subscribed"};
     }
 
     children = function() {
