@@ -224,7 +224,7 @@ Child Pico
         temp_results = results{[correlation_identifier, event:attr("vehicle_eci")]} || [];
         vehicles_trips = event:attr("trips").decode().klog("Trips recieved from child eci: " + event:attr("vehicle_eci"));
         finished_trips = temp_results.append(vehicles_trips{["the_trips"]});
-        results = results.put([correlation_identifier, event:attr("vehicle_eci")], finished_trips);
+        the_results = results.put([correlation_identifier, event:attr("vehicle_eci")], finished_trips);
 
         temp_results = ent:running_reports || {};
         current_report = temp_results{[correlation_identifier]} || [];
@@ -244,11 +244,11 @@ Child Pico
           attributes event:attrs();
 
           set ent:running_reports running_reports;
-          set ent:finished_reports results;
+          set ent:finished_reports the_results;
           log("finished collecting");
       } else {
           set ent:running_reports running_reports;
-          set ent:finished_reports results;
+          set ent:finished_reports the_results;
           log("Still waiting on reports");
       }
     }
