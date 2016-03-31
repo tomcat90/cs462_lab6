@@ -31,7 +31,7 @@ Child Pico
         vehicle_obj{"attributes"}
       });
 
-      vehicle_ecis
+      vehicle_ecis.klog("Ecis: ")
     }
 
     allSubs = function() {
