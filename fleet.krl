@@ -15,7 +15,11 @@ Child Pico
   global {
     vehicles = function() {
       vehicles = allSubs();
-      filtered_subscriptions = vehicles.filter(function(obj) {
+      stripped_vehicles = vehicles.map(function(vehicle){
+                vals = vehicle.values();
+                vals.head()
+      });
+      filtered_subscriptions = stripped_vehicles.filter(function(obj) {
           obj{"status"} eq "subscribed" && obj{"relationship"} eq "Fleet" && obj{"name_space"} eq "Fleet_Subscriptions"
         });
       filtered_subscriptions;
