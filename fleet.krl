@@ -14,7 +14,7 @@ Child Pico
   }
   global {
     get_reports = function() {
-      trip_reports = ent:trip_reports || [];
+      trip_reports = ent:finalized_reports || [];
       //Only returns five so figure out last index
       end_index = (trip_reports.length() > 4) => 4 | trip_reports.length() - 1;
       sliced_reports = (end_index > -1) => trip_reports.slice(end_index) | [];
@@ -258,11 +258,11 @@ Child Pico
       pre {
         attributes = event:attrs().klog("these are the attributes recieved: ");
         correlation_identifier = event:attrs("correlation_identifier");
-        finished_reports = ent:finished_reports;
+        finished_reports = ent:finished_reports.klog("finished Reports: ");
         finalized_reports = ent:finalized_reports || [];
         //This is hacky way to make sure they are in the correct order found online
         reversed_finalized_reports = finalized_reports.reverse();
-        trips = finished_reports{[correlation_identifier]}.values();
+        trips = finished_reports{[correlation_identifier]}.values().klog("The trips: ");
         count_of_trips = trips.length();
         count_of_vehicles = finished_reports.length();
 
@@ -278,7 +278,7 @@ Child Pico
         send_directive("All is finished");
       }
       always {
-        set ent:trip_reports final;
+        set ent:finalized_reports final;
       }
     }
 
