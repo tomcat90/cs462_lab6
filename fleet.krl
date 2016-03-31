@@ -220,14 +220,14 @@ Child Pico
                   .klog("The vehicle");
           reports = ent:reports || {};
           current_report = reports{[correlation_identifier]} || {};
-          vehicles = current_report{["vehicles"]} || [];
-          new_vehicles = vehicles.append(vehicle).klog("The new vehicles: ");
+          //vehicles = current_report{["vehicles"]} || [];
+          //new_vehicles = vehicles.append(vehicle).klog("The new vehicles: ");
           vehicles_count = vehicles().length();
           responding_count = new_vehicles.length();
           new_report = {}
                         .put(["vehicles_count"], vehicles_count)
                         .put(["responding_count"], responding_count)
-                        .put(["vehicles"], new_vehicles)
+            //            .put(["vehicles"], new_vehicles)
                         .klog("New Report: ")
                         ;
           new_reports = reports.put([correlation_identifier], new_report).klog("New reports: ");
