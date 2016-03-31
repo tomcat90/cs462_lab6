@@ -9,10 +9,18 @@ Child Pico
     sharing on
 
     use module  b507199x5 alias wrangler
-    provides vehicles, children, trips, allSubs, vehicle_ecis
+    provides vehicles, children, trips, allSubs, vehicle_ecis, get_reports
 
   }
   global {
+    get_reports = function() {
+      trip_reports = ent:trip_reports || [];
+      //Only returns five so figure out last index
+      end_index = (trip_reports.length() > 4) => 4 | trip_reports.length() - 1;
+      sliced_reports = (end_index > -1) => trip_reports.slice(end_index) | [];
+      reversed_trips = sliced_reports.reverse();
+      reversed_trips;
+    }
     vehicles = function() {
       vehicles = allSubs();
       stripped_vehicles = vehicles.map(function(vehicle){
@@ -234,7 +242,7 @@ Child Pico
           finished_cor_id = "Cor Id : " + correlation_identifier + " has finished";
       }
       fired {
-        raise explicit event 'finish_report'
+        raise explicit event 'finalize_report'
           attributes event:attrs();
 
           set ent:running_reports running_reports;
@@ -244,6 +252,35 @@ Child Pico
           set ent:running_reports running_reports;
           set ent:finished_reports results;
           log("Still waiting on reports");
+      }
+    }
+
+    rule finalize_report {
+      select when explicit finalize_report
+      pre {
+        attributes = event:attrs();
+        correlation_identifier = event:attrs("correlation_identifier");
+        finished_reports = ent:finished_reports;
+        finalized_reports = ent:finalized_reports || [];
+        //This is hacky way to make sure they are in the correct order found online
+        reversed_finalized_reports = finalized_reports.reverse();
+        trips = finished_reports{[correlation_identifier]}.values();
+        count_of_trips = trips.length();
+        count_of_vehicles = finished_reports.length();
+
+        current_report = {}
+                          .put(['responding'], count_of_trips)
+                          .put(["vehicles"], count_of_vehicles)
+                          .put(["trips"], trips)
+                          .klog("The report: ");
+        temp_reports = reversed_finalized_reports.append(current_report);
+        final = temp_reports.reverse(); //Undo our hacky method
+      }
+      {
+        send_directive("All is finished");
+      }
+      always {
+        set ent:trip_reports final;
       }
     }
 
