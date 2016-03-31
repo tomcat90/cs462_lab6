@@ -14,11 +14,12 @@ Child Pico
   }
   global {
     get_reports = function() {
-      trip_reports = ent:reports || [];
+      trip_reports = ent:reports;
+      trip_reports;
       //Only returns five so figure out last index
-      end_index = (trip_reports.length() > 4) => 4 | trip_reports.length() - 1;
-      sliced_reports = (end_index > -1) => trip_reports.slice(end_index) | [];
-      sliced_reports;
+      //end_index = (trip_reports.length() > 4) => 4 | trip_reports.length() - 1;
+      //sliced_reports = (end_index > -1) => trip_reports.slice(end_index) | [];
+      //sliced_reports;
     }
 
     vehicles = function() {
