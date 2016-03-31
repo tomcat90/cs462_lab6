@@ -166,9 +166,85 @@ Child Pico
       }
     }
 
-    rule trigger_new_fleet {
-      select when fleet get_report
+    rule generate_report {
+      select when fleet generate_report
+      pre {
+        correlation_identifier = "Report-" + math:random(99999);
+        vehicle_ecis = vehicle_ecis();
+        attrs = {}
+                  .put(["correlation_identifier"], correlation_identifier)
+                  .put(["vehicle_ecis"], vehicle_ecis)
+                  .klog("Attrs of get_report: ");
+      }
+      fired {
+        raise explicit event 'start_scatter_report'
+            attributes attrs;
+        log("Started a scatter report");
+      }
+    }
 
+    rule start_scatter_report {
+      select when explicit start_scatter_report
+      foreach event:attr("vehicle_ecis") setting (eci)
+      pre {
+        correlation_identifier = event:attr("correlation_identifier");
+        tmp_reports = ent:running_reports || {};
+        current_report = tmp_reports{[correlation_identifier]} || [];
+        tmp_report = current_report.append(eci);
+        running_reports = tmp_reports.put([correlation_identifier], tmp_report);
+        attributes = {}
+                      .put(["correlation_identifier"], correlation_identifier)
+                      .put(["parent_eci"], meta:eci())
+                      .put(["event_domain"], "vehicle")
+                      .put(["event_identifier"], "recieve_report")
+                      .klog("start_scatter_report attribs: ")
+                      ;
+      }
+      {
+        event:send({"cid":eci}, "fleet", "report_trips")
+          with attrs = attributes.klog("Send report_trips event with attrs: ");
+      }
+      always {
+        set ent:running_reports running_reports;
+        log "Sent report trips to child: " + eci;
+      }
+    }
+
+    rule recieve_report {
+      select when vehicle recieve_report
+      pre {
+        results = ent:finished_reports || {};
+        correlation_identifier = event:attr("correlation_identifier");
+        temp_results = results{[correlation_identifier, event:attr("vehicle_eci")]} || [];
+        vehicles_trips = event:attr("trips").decode().klog("Trips recieved from child eci: " + event:attr("vehicle_eci"));
+        finished_trips = temp_results.append(vehicles_trips);
+        results = results.put([correlation_identifier, event:attr("vehicle_eci")], finished_trips);
+
+        temp_results = ent:running_reports || {};
+        current_report = temp_results{[correlation_identifier]} || [];
+        temp_report = current_report.filter(function(eci) {
+            eci neq event:attr("vehicle_eci")
+          });
+        running_reports = temp_results.put([correlation_identifier], temp_report);
+      }
+
+      if (running_reports{[correlation_identifier]}.length() == 0) then {
+        //We know it has all of the reports back
+        send_directive("finished_cor_id") with
+          finished_cor_id = "Cor Id : " + correlation_identifier + " has finished";
+      }
+      fired {
+        raise explicit event 'finish_report'
+          attributes event:attrs();
+
+          set ent:running_reports running_reports;
+          set ent:finished_reports results;
+          log("finished collecting");
+      } else {
+          set ent:running_reports running_reports;
+          set ent:finished_reports results;
+          log("Still waiting on reports");
+      }
     }
 
 }

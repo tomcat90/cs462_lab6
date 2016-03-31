@@ -76,4 +76,27 @@ ruleset trip_store {
     send_directive("long_trips") with
       long_trips = ent:long_trips;
   }
+
+  rule report_trips {
+    select when fleet report_trips
+    pre {
+      my_trips = trips();
+      my_trips_map = my_trips.map(function(trip){
+            vals = trip.values();
+            vals.head();
+        });
+
+      attributes = {}
+                    .put(["correlation_identifier"], event:attr("correlation_identifier"))
+                    .put(["trips"], my_trips_map.encode())
+                    .put(["vehicle_eci"], meta:eci());
+      parent_eci = event:attr("parent_eci");
+      parent_event_domain = event:attr("event_domain");
+      parent_event_identifier = event:attr("event_identifier");
+    }
+    {
+      event:send({"cid":parent_eci}, parent_event_domain, parent_event_identifier)
+          with attrs = attributes;
+    }
+  }
 }
