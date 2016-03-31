@@ -14,13 +14,13 @@ Child Pico
   }
   global {
     get_reports = function() {
-      trip_reports = ent:finalized_reports || [];
+      trip_reports = ent:reports || [];
       //Only returns five so figure out last index
       end_index = (trip_reports.length() > 4) => 4 | trip_reports.length() - 1;
       sliced_reports = (end_index > -1) => trip_reports.slice(end_index) | [];
-      reversed_trips = sliced_reports.reverse();
-      reversed_trips;
+      sliced_reports;
     }
+
     vehicles = function() {
       vehicles = allSubs();
       stripped_vehicles = vehicles.map(function(vehicle){
@@ -219,67 +219,23 @@ Child Pico
     rule recieve_report {
       select when vehicle recieve_report
       pre {
-        results = ent:finished_reports || {};
-        correlation_identifier = event:attr("correlation_identifier");
-        temp_results = results{[correlation_identifier, event:attr("vehicle_eci")]} || [];
-        vehicles_trips = event:attr("trips").decode().klog("Trips recieved from child eci: " + event:attr("vehicle_eci"));
-        finished_trips = temp_results.append(vehicles_trips{["the_trips"]}).klog("Temp Results: ");
-        the_results = results.put([correlation_identifier, event:attr("vehicle_eci")], finished_trips).klog("The Results: ");
-
-        temp2_results = ent:running_reports || {};
-        current_report = temp2_results{[correlation_identifier]} || [];
-        temp_report = current_report.filter(function(eci) {
-            eci neq event:attr("vehicle_eci")
-          });
-        running_reports = temp2_results.put([correlation_identifier], temp_report).klog("running reports: ");
-      }
-
-      if (running_reports{[correlation_identifier]}.length() == 0) then {
-        //We know it has all of the reports back
-        send_directive("finished_cor_id") with
-          finished_cor_id = "Cor Id : " + correlation_identifier + " has finished";
-      }
-      fired {
-        raise explicit event 'finalize_report'
-          attributes event:attrs();
-
-          set ent:running_reports running_reports;
-          set ent:finished_reports the_results;
-          log("finished collecting");
-      } else {
-          set ent:running_reports running_reports;
-          set ent:finished_reports the_results;
-          log("Still waiting on reports");
-      }
-    }
-
-    rule finalize_report {
-      select when explicit finalize_report
-      pre {
-        attributes = event:attrs().klog("these are the attributes recieved: ");
-        correlation_identifier = event:attrs("correlation_identifier");
-        finished_reports = ent:finished_reports.klog("finished Reports: ");
-        finalized_reports = ent:finalized_reports || [];
-        //This is hacky way to make sure they are in the correct order found online
-        reversed_finalized_reports = finalized_reports.reverse();
-        top_trips = finished_reports{[correlation_identifier]}.klog("WTF IS THIS: ");
-        count_of_trips = trips.length();
-        count_of_vehicles = finished_reports.length();
-
-        current_report = {}
-                          .put(['responding'], count_of_trips)
-                          .put(["vehicles"], count_of_vehicles)
-                          .put(["trips"], trips)
-                          .klog("The report: ");
-        temp_reports = reversed_finalized_reports.append(current_report);
-        final = temp_reports.reverse(); //Undo our hacky method
+          correlation_identifier = event:attr("correlation_identifier");
+          vehicle_trips = event:attr("trips").decode().klog("Trips recieved");
+          vehicle_eci = event:attr("vehicle_eci").klog("Child Eci: ");
+          vehicle = {}
+                  .put(["vehicle_eci"], vehicle_eci)
+                  .put(["trips"], vehicle_trips)
+                  .klog("The vehicle");
+          reports = ent:reports || {};
+          current_report = reports{[correlation_identifier]} || [];
+          new_report = current_report.append(vehicle).klog("The new report: ");
+          new_reports = reports.put([correlation_identifier], new_report).klog("New reports: ");
       }
       {
-        send_directive("All is finished");
+        noop();
       }
       always {
-        set ent:finalized_reports final;
+        set ent:reports new_reports;
       }
     }
-
 }
