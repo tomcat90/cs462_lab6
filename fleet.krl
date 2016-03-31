@@ -9,7 +9,7 @@ Child Pico
     sharing on
 
     use module  b507199x5 alias wrangler
-    provides vehicles, children, trips
+    provides vehicles, children, trips, allSubs
 
   }
   global {
@@ -20,6 +20,12 @@ Child Pico
           obj{"status"} eq "subscribed" && obj{"relationship"} eq "Fleet" && obj{"name_space"} eq "Fleet_Subscriptions"
         });
       filtered_subscriptions;
+    }
+
+    allSubs = function() {
+      wranglerSubs = wrangler:subscriptions();
+      subscriptions = wranglerSubs{"subscriptions"};
+      subscriptions;
     }
 
     children = function() {
