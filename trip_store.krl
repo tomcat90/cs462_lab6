@@ -88,7 +88,7 @@ ruleset trip_store {
 
       attributes = {}
                     .put(["correlation_identifier"], event:attr("correlation_identifier"))
-                    .put(["trips"], my_trips_map.encode())
+                    .put(["trips"], my_trips)
                     .put(["vehicle_eci"], meta:eci())
                     .klog("These are what the child is sending: ");
       parent_eci = event:attr("parent_eci").klog("Sending to: ");
