@@ -223,7 +223,7 @@ Child Pico
         correlation_identifier = event:attr("correlation_identifier");
         temp_results = results{[correlation_identifier, event:attr("vehicle_eci")]} || [];
         vehicles_trips = event:attr("trips").decode().klog("Trips recieved from child eci: " + event:attr("vehicle_eci"));
-        finished_trips = temp_results.append(vehicles_trips);
+        finished_trips = temp_results.append(vehicles_trips{["the_trips"]});
         results = results.put([correlation_identifier, event:attr("vehicle_eci")], finished_trips);
 
         temp_results = ent:running_reports || {};
