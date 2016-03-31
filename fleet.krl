@@ -222,7 +222,7 @@ Child Pico
           current_report = reports{[correlation_identifier]} || {};
           theVehicles = current_report{["vehicles"]} || [];
           new_vehicles = theVehicles.append(vehicle).klog("The new vehicles: ");
-          vehicles_count = vehicles().keys().length();
+          vehicles_count = vehicle_ecis().length();
           responding_count = new_vehicles.length();
           new_report = {}
                         .put(["vehicles_count"], vehicles_count)
