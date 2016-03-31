@@ -194,10 +194,6 @@ Child Pico
       foreach event:attr("vehicle_ecis") setting (eci)
       pre {
         correlation_identifier = event:attr("correlation_identifier");
-        tmp_reports = ent:running_reports || {};
-        current_report = tmp_reports{[correlation_identifier]} || [];
-        tmp_report = current_report.append(eci);
-        running_reports = tmp_reports.put([correlation_identifier], tmp_report);
         attributes = {}
                       .put(["correlation_identifier"], correlation_identifier)
                       .put(["parent_eci"], meta:eci())
@@ -210,10 +206,6 @@ Child Pico
         event:send({"cid":eci}, "fleet", "report_trips")
           with attrs = attributes.klog("Send report_trips event with attrs: ");
       }
-      always {
-        set ent:running_reports running_reports;
-        log "Sent report trips to child: " + eci;
-      }
     }
 
     rule recieve_report {
@@ -224,7 +216,7 @@ Child Pico
           vehicle_eci = event:attr("vehicle_eci").klog("Child Eci: ");
           vehicle = {}
                   .put(["vehicle_eci"], vehicle_eci)
-                  .put(["trips"], vehicle_trips)
+                  .put(["trips"], vehicle_trips{["the_trips"]})
                   .klog("The vehicle");
           reports = ent:reports || {};
           current_report = reports{[correlation_identifier]} || [];
@@ -238,4 +230,11 @@ Child Pico
         set ent:reports new_reports;
       }
     }
+
+   rule clear_everything  {
+    select when fleet reset_reports
+    always{
+      clear ent:reports;
+    }
+  }
 }
