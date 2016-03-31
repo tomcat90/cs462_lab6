@@ -16,6 +16,9 @@ Child Pico
     vehicles = function() {
       wranglerSubs = wrangler:subscriptions();
       subscriptions = wranglerSubs{"subscriptions"};
+      subscriptions = subscriptions.filter(function(vehicle) {
+          vehicle{"relationship"} eq "Fleet";
+        });
       subscriptions;
     }
 
